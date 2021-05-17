@@ -35,5 +35,14 @@ pipeline {
                 deploy adapters: [tomcat8(credentialsId: 'tomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
             }
         }
+        stage('Deploy Frontend') {
+            dir('frontend') {
+                steps {
+                    git credentialsId: 'github_login', url: 'https://github.com/AquillaSLeite/tasks-frontend'
+                    bat 'mvnw package -DskipTests=true'
+                    deploy adapters: [tomcat8(credentialsId: 'tomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks', war: 'target/tasks.war'
+                }
+            }
+        }
     }
 }
